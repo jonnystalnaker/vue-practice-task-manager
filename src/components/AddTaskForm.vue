@@ -22,9 +22,22 @@
       </div>
       <div class="button-group">
         <button type="submit">Add Task</button>
-        <button type="button" @click="fetchRandomTodo" class="fetch-random-btn">
-          Fetch Random Todo
-        </button>
+        <Suspense>
+          <template #default>
+            <button
+              type="button"
+              @click="fetchRandomTodo"
+              class="fetch-random-btn"
+            >
+              Fetch Random Todo
+            </button>
+          </template>
+          <template #fallback>
+            <button class="fetch-random-btn loading" disabled>
+              Loading...
+            </button>
+          </template>
+        </Suspense>
       </div>
     </form>
   </div>
@@ -50,8 +63,12 @@ export default defineComponent({
       }
     };
 
-    const fetchRandomTodo = () => {
-      taskStore.fetchRandomTodo();
+    const fetchRandomTodo = async () => {
+      try {
+        await taskStore.fetchRandomTodo();
+      } catch (error) {
+        console.error("Failed to fetch random todo:", error);
+      }
     };
 
     return {
@@ -122,6 +139,11 @@ export default defineComponent({
 
         &:hover {
           background-color: #0056b3;
+        }
+
+        &.loading {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
       }
     }

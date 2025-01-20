@@ -36,8 +36,8 @@ export const useTaskStore = defineStore("taskStore", {
     },
     deleteTask(id: number) {
       const task = this.tasks.find((task) => task.id === id);
-      if (task && task.completed) {
-        task.completed = false; // Toggle to incomplete before deletion
+      if (task) {
+        task.completed = false; // Toggle to incomplete if completed
       }
       this.tasks = this.tasks.filter((task) => task.id !== id);
       console.log("Updated tasks in store:", this.tasks); // Confirm the array is updated
